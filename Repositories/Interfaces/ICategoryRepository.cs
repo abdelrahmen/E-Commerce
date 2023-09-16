@@ -8,8 +8,6 @@ namespace E_Commerce.Repositories.Interfaces
 
         Category? GetById(int id);
 
-        Category GetByName(string name);
-
         Category AddCategory(Category category);
 
         void Delete(int id);

@@ -94,17 +94,12 @@ namespace E_Commerce.Controllers
 		}
 
 		// POST: Categories/Delete/5
-		//[HttpPost, ActionName("Delete")]
-		//[ValidateAntiForgeryToken]
+		[HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
 		public IActionResult DeleteConfirmed(int id)
 		{
 			_categoryRepository.Delete(id);
 			return RedirectToAction("index");
 		}
-
-		//private bool CategoryExists(int id)
-		//{
-		//    return (_context.Category?.Any(e => e.Id == id)).GetValueOrDefault();
-		//}
 	}
 }

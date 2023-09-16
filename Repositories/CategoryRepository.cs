@@ -39,11 +39,6 @@ namespace E_Commerce.Repositories
 			return context.Category.FirstOrDefault(c => c.Id == id);
 		}
 
-		public Category GetByName(string name)
-		{
-			throw new NotImplementedException();
-		}
-
 		public Category? Edit(Category category)
 		{
 			var catigoryToEdit = context.Category.FirstOrDefault(c => c.Id == category.Id);
