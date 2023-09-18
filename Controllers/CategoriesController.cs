@@ -22,7 +22,15 @@ namespace E_Commerce.Controllers
 		}
 
 		// GET: Categories
+		//for all users
 		public IActionResult Index()
+		{
+			var categories = _categoryRepository.GetAll();
+			return View(categories);
+		}
+
+		// GET: Categories/Manage
+		public IActionResult Manage()
 		{
 			var categories = _categoryRepository.GetAll();
 			return View(categories);
@@ -101,5 +109,12 @@ namespace E_Commerce.Controllers
 			_categoryRepository.Delete(id);
 			return RedirectToAction("index");
 		}
+	
+		public IActionResult CategoryProducts(int id)
+		{
+			var categoryWithProducts = _categoryRepository.GetById(id);
+			return View(categoryWithProducts);
+		}
+
 	}
 }

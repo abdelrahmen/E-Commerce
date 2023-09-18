@@ -36,6 +36,11 @@ namespace E_Commerce
             {
                 app.UseExceptionHandler("/Home/Error");
             }
+
+            app.UseCors(c => {
+                c.AllowAnyOrigin();
+            });
+
             app.UseStaticFiles();
 
             app.UseRouting();

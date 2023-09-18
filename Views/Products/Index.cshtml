@@ -1,13 +1,13 @@
 ﻿@model IEnumerable<E_Commerce.Models.Product>
 
 @{
-    ViewData["Title"] = "Index";
+	ViewData["Title"] = "Index";
 }
 
 <h1>Products</h1>
 <hr />
 
-<table class="table">
+@* <table class="table">
     <thead>
         <tr>
             <th>
@@ -60,4 +60,20 @@
         </tr>
 }
     </tbody>
-</table>
+</table> *@
+<div class="d-flex justify-content-around flex-wrap align-content-around">
+
+	@foreach (var product in Model)
+	{
+		var image = $"~/images/Products/{product.image}";
+		<div class="card" style="width:300px">
+            <img class="card-img-top" src=@Url.Content(image) alt="Card image">
+			<div class="card-body">
+				<h4 class="card-title">@product.Name</h4>
+				<h5 class="card-title">@product.Price.ToString("C0")</h5>
+				<p class="card-text">@product.Description</p>
+				<a href="#" class="btn btn-primary">Add To Cart</a>
+			</div>
+		</div>
+	}
+</div>

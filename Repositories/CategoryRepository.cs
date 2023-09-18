@@ -1,6 +1,7 @@
 ﻿using E_Commerce.Data;
 using E_Commerce.Models;
 using E_Commerce.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace E_Commerce.Repositories
 {
@@ -36,7 +37,7 @@ namespace E_Commerce.Repositories
 
 		public Category? GetById(int id)
 		{
-			return context.Category.FirstOrDefault(c => c.Id == id);
+			return context.Category.Include(c=>c.Products).FirstOrDefault(c => c.Id == id);
 		}
 
 		public Category? Edit(Category category)
