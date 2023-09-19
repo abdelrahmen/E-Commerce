@@ -22,6 +22,11 @@ namespace E_Commerce
                 o.Password.RequireLowercase = false;
             }).AddEntityFrameworkStores<AppDbContext>();
 
+            builder.Services.AddSession(o =>
+            {
+                o.IdleTimeout = TimeSpan.FromMinutes(30);
+            });
+
             builder.Configuration.AddJsonFile("appsettings.json");
 
             builder.Services.AddDbContext<AppDbContext>();
@@ -44,7 +49,9 @@ namespace E_Commerce
             app.UseStaticFiles();
 
             app.UseRouting();
+            app.UseSession();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(
