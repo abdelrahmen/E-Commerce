@@ -5,9 +5,9 @@
 }
 <h1>Register an Admin</h1>
 
-@if(ViewBag.msg != null)
+@if(TempData["msg"] != null)
 {
-    <h3>@ViewBag.msg</h3>
+    <h3>@TempData["msg"].ToString()</h3>
 }
 
 <hr />

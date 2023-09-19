@@ -47,7 +47,18 @@ namespace E_Commerce.Controllers
                 var userCreated = await userManager.CreateAsync(user, userVM.Password);
                 if (userCreated.Succeeded)
                 {
-                    return RedirectToAction("Login");
+                    var result = await userManager.AddToRoleAsync(user, "Customer");
+                    if (result.Succeeded)
+                    {
+                        return RedirectToAction("Login");
+                    }
+                    else
+                    {
+                        foreach (var err in result.Errors)
+                        {
+                            ModelState.AddModelError("", err.Description);
+                        }
+                    }
                 }
                 else
                 {
@@ -128,7 +139,7 @@ namespace E_Commerce.Controllers
                     var result = await userManager.AddToRoleAsync(user, "Admin");
                     if (result.Succeeded)
                     {
-                        ViewData["msg"] = $"user [{user.UserName}] is created Successfully with the role [admin]";
+                        TempData["msg"] = $"user [{user.UserName}] is created Successfully with the role [admin]";
                     }
                     else
                     {
