@@ -1,0 +1,58 @@
+﻿@model List<User>
+
+@{
+	ViewData["Title"] = "Manage";
+}
+
+<h1>Manage</h1>
+<br />
+@if (User.IsInRole("SuperAdmin"))
+{
+	<a type="button" class="btn btn-dark" asp-controller="Account" asp-action="AddAdmin">Add an Admin</a>
+}
+
+<table class="table">
+	<thead>
+		<tr>
+			<th>
+				@Html.DisplayNameFor(model => model[0].Fullname)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model[0].CreatedAt)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model[0].Email)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model[0].UserName)
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td>
+					@Html.DisplayFor(modelItem => item.Fullname)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.CreatedAt)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Email)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.UserName)
+				</td>
+				<td>
+					<a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+					<a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>
+
+
+

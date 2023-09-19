@@ -7,157 +7,207 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace E_Commerce.Controllers
 {
-    public class AccountController : Controller
-    {
-        private readonly UserManager<User> userManager;
-        private readonly RoleManager<IdentityRole> roleManager;
-        private readonly SignInManager<User> signInManager;
+	public class AccountController : Controller
+	{
+		private readonly UserManager<User> userManager;
+		private readonly RoleManager<IdentityRole> roleManager;
+		private readonly SignInManager<User> signInManager;
 
-        public AccountController(
-            UserManager<User> userManager,
-            RoleManager<IdentityRole> roleManager,
-            SignInManager<User> signInManager
-            )
-        {
-            this.userManager = userManager;
-            this.roleManager = roleManager;
-            this.signInManager = signInManager;
-        }
+		public AccountController(
+			UserManager<User> userManager,
+			RoleManager<IdentityRole> roleManager,
+			SignInManager<User> signInManager
+			)
+		{
+			this.userManager = userManager;
+			this.roleManager = roleManager;
+			this.signInManager = signInManager;
+		}
 
-        // GET: Account/Register
-        public IActionResult Register()
-        {
-            return View();
-        }
+		// GET: Account/Register
+		public IActionResult Register()
+		{
+			return View();
+		}
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> RegisterAsync(CreateUserViewModel userVM)
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> RegisterAsync(CreateUserViewModel userVM)
+		{
+			if (ModelState.IsValid)
+			{
+				var user = new User
+				{
+					Fullname = userVM.Fullname,
+					UserName = userVM.Username,
+					Email = userVM.Email,
+					Address = userVM.Address,
+					CreatedAt = DateTime.Now,
+				};
+				var userCreated = await userManager.CreateAsync(user, userVM.Password);
+				if (userCreated.Succeeded)
+				{
+					var result = await userManager.AddToRoleAsync(user, "Customer");
+					if (result.Succeeded)
+					{
+						return RedirectToAction("Login");
+					}
+					else
+					{
+						foreach (var err in result.Errors)
+						{
+							ModelState.AddModelError("", err.Description);
+						}
+					}
+				}
+				else
+				{
+					foreach (var err in userCreated.Errors)
+					{
+						ModelState.AddModelError("", err.Description);
+					}
+				}
+			}
+			return View();
+		}
+
+		//GET: Account/Login
+		public IActionResult Login()
+		{
+			return View();
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> Login(LoginUserViewModel userVM)
+		{
+			if (ModelState.IsValid)
+			{
+				var user = await userManager.FindByNameAsync(userVM.Username);
+				if (user != null)
+				{
+					var matched = await userManager.CheckPasswordAsync(user, userVM.Password);
+					if (matched)
+					{
+						await signInManager.SignInAsync(user, false);
+						return RedirectToAction("Index", "Products");
+					}
+					else
+					{
+						ModelState.AddModelError("", "invalid login info");
+					}
+				}
+				else
+				{
+					ModelState.AddModelError("", "user not found");
+				}
+			}
+			return View(userVM);
+		}
+
+		public async Task<IActionResult> Logout()
+		{
+			await signInManager.SignOutAsync();
+			return RedirectToAction("Index", "Products");
+		}
+
+		[Authorize(Roles = "SuperAdmin")]
+		public IActionResult AddAdmin()
+		{
+			return View();
+
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Roles = "SuperAdmin")]
+		public async Task<IActionResult> AddAdminAsync(CreateUserViewModel userVM)
+		{
+			if (ModelState.IsValid)
+			{
+				var user = new User
+				{
+					Fullname = userVM.Fullname,
+					UserName = userVM.Username,
+					Email = userVM.Email,
+					Address = userVM.Address,
+					CreatedAt = DateTime.Now,
+				};
+				var userCreated = await userManager.CreateAsync(user, userVM.Password);
+				if (userCreated.Succeeded)
+				{
+					var result = await userManager.AddToRoleAsync(user, "Admin");
+					if (result.Succeeded)
+					{
+						TempData["msg"] = $"user [{user.UserName}] is created Successfully with the role [admin]";
+					}
+					else
+					{
+						foreach (var err in result.Errors)
+						{
+							ModelState.AddModelError("", err.Description);
+						}
+					}
+				}
+				else
+				{
+					foreach (var err in userCreated.Errors)
+					{
+						ModelState.AddModelError("", err.Description);
+					}
+				}
+			}
+			return View(userVM);
+		}
+
+		[Authorize(Roles = "SuperAdmin,Admin")]
+		public async Task<IActionResult> ManageCustomers()
+		{
+			var customers = await userManager.GetUsersInRoleAsync("Customer");
+			return View(customers);
+		}
+
+		[Authorize(Roles = "SuperAdmin")]
+		public async Task<IActionResult> ManageAdmins()
+		{
+			var admins = await userManager.GetUsersInRoleAsync("Admin");
+			return View("ManageCustomers", admins);
+		}
+
+        [Authorize(Roles = "SuperAdmin,Admin")]
+        public async Task<IActionResult> Delete(string id)
+		{
+			var user = await userManager.FindByIdAsync(id);
+			if (user != null)
+			{
+				return View(user);
+			}
+			return View("DoesNotExist");
+		}
+
+		[HttpPost, ActionName("Delete")]
+		[ValidateAntiForgeryToken]
+        [Authorize(Roles = "SuperAdmin,Admin")]
+
+        public async Task<IActionResult> DeleteConfirmed(string id)
+		{
+			var user = await userManager.FindByIdAsync(id);
+			if (user != null)
+			{
+				await userManager.DeleteAsync(user);
+				return RedirectToAction("index");
+			}
+			return View("DoesNotExist");
+		}
+
+        public async Task<IActionResult> Details(string id)
         {
-            if (ModelState.IsValid)
+            var user = await userManager.FindByIdAsync(id);
+            if (user != null)
             {
-                var user = new User
-                {
-                    Fullname = userVM.Fullname,
-                    UserName = userVM.Username,
-                    Email = userVM.Email,
-                    Address = userVM.Address,
-                    CreatedAt = DateTime.Now,
-                };
-                var userCreated = await userManager.CreateAsync(user, userVM.Password);
-                if (userCreated.Succeeded)
-                {
-                    var result = await userManager.AddToRoleAsync(user, "Customer");
-                    if (result.Succeeded)
-                    {
-                        return RedirectToAction("Login");
-                    }
-                    else
-                    {
-                        foreach (var err in result.Errors)
-                        {
-                            ModelState.AddModelError("", err.Description);
-                        }
-                    }
-                }
-                else
-                {
-                    foreach (var err in userCreated.Errors)
-                    {
-                        ModelState.AddModelError("", err.Description);
-                    }
-                }
+                return View(user);
             }
-            return View();
-        }
-
-        //GET: Account/Login
-        public IActionResult Login()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginUserViewModel userVM)
-        {
-            if (ModelState.IsValid)
-            {
-                var user = await userManager.FindByNameAsync(userVM.Username);
-                if (user != null)
-                {
-                    var matched = await userManager.CheckPasswordAsync(user, userVM.Password);
-                    if (matched)
-                    {
-                        await signInManager.SignInAsync(user, false);
-                        return RedirectToAction("Index", "Products");
-                    }
-                    else
-                    {
-                        ModelState.AddModelError("", "invalid login info");
-                    }
-                }
-                else
-                {
-                    ModelState.AddModelError("", "user not found");
-                }
-            }
-            return View(userVM);
-        }
-
-        public async Task<IActionResult> Logout()
-        {
-            await signInManager.SignOutAsync();
-            return RedirectToAction("Index", "Products");
-        }
-
-        [Authorize(Roles = "SuperAdmin")]
-        public IActionResult AddAdmin()
-        {
-            return View();
-
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "SuperAdmin")]
-        public async Task<IActionResult> AddAdminAsync(CreateUserViewModel userVM)
-        {
-            if (ModelState.IsValid)
-            {
-                var user = new User
-                {
-                    Fullname = userVM.Fullname,
-                    UserName = userVM.Username,
-                    Email = userVM.Email,
-                    Address = userVM.Address,
-                    CreatedAt = DateTime.Now,
-                };
-                var userCreated = await userManager.CreateAsync(user, userVM.Password);
-                if (userCreated.Succeeded)
-                {
-                    var result = await userManager.AddToRoleAsync(user, "Admin");
-                    if (result.Succeeded)
-                    {
-                        TempData["msg"] = $"user [{user.UserName}] is created Successfully with the role [admin]";
-                    }
-                    else
-                    {
-                        foreach (var err in result.Errors)
-                        {
-                            ModelState.AddModelError("", err.Description);
-                        }
-                    }
-                }
-                else
-                {
-                    foreach (var err in userCreated.Errors)
-                    {
-                        ModelState.AddModelError("", err.Description);
-                    }
-                }
-            }
-            return View(userVM);
+            return View("DoesNotExist");
         }
     }
 }
