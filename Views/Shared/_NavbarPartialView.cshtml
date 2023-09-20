@@ -42,6 +42,7 @@
 					}
 					@if (User.Identity.IsAuthenticated)
 					{
+						<li><a class="nav-link text-dark" asp-area="" asp-controller="Cart" asp-action="Index">Cart</a></li>
 						<li><a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Logout">Logout</a></li>
 					}
 				</ul>

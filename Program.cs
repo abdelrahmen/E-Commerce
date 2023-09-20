@@ -33,6 +33,7 @@ namespace E_Commerce
 
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+            builder.Services.AddScoped<ICartRepository, CartRepository>();
 
             var app = builder.Build();
 
