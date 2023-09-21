@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace E_Commerce.Controllers
 {
+	[Authorize]
 	public class CartController : Controller
 	{
 		private readonly ICartRepository cartRepository;
@@ -35,7 +36,6 @@ namespace E_Commerce.Controllers
 		}
 
 		[HttpPost]
-		[Authorize]
 		public IActionResult AddToCart(CartItem item)
 		{
 			item.UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
@@ -43,7 +43,6 @@ namespace E_Commerce.Controllers
 			return RedirectToAction("Index", "Products");
 		}
 
-		[Authorize]
 		public IActionResult EmptyCart()
 		{
 			var UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
@@ -53,7 +52,6 @@ namespace E_Commerce.Controllers
 
 		// GET: Cart/Edit/5
 
-		[Authorize]
 		[HttpGet]
         public IActionResult Edit(int id)
         {
@@ -64,7 +62,6 @@ namespace E_Commerce.Controllers
             }
             return View("DoesNotExist");
         }
-		[Authorize]
 		[HttpPost]
 		public IActionResult Edit(CartItem item) 
 		{
