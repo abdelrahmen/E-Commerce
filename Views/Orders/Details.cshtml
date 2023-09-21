@@ -1,0 +1,49 @@
+﻿@model E_Commerce.Models.Order
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Order Details</h1>
+
+<div>
+    <hr />
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    <p>Product Name</p>
+                </th>
+                <th>
+                    <p>Price</p>
+                </th>
+                <th>
+                    <p>Quantity</p>
+                </th>
+                <th>
+                    <p>Total</p>
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.OrderDetails)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Product.Name)
+                    </td>
+                    <td>
+                        <p>@item.Price.ToString("C0")</p>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Quantity)
+                    </td>
+                    <td>
+                        <p>@item.Total.ToString("C0")</p>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

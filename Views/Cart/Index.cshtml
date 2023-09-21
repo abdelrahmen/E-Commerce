@@ -45,9 +45,17 @@
 		</tbody>
 	</table>
 
-
-	<a type="submit" class="btn btn-danger" asp-action="EmptyCart">Empty Cart</a>
-}else{
+	<div class="btn-toolbar justify-content-between">
+		<div class="btn-group">
+			<a class="btn btn-primary" asp-action="PlaceOrder" asp-controller="Orders">Place Order</a>
+		</div>
+		<div class="btn-group">
+			<a class="btn btn-danger" asp-action="EmptyCart">Empty Cart</a>
+		</div>
+	</div>
+}
+else
+{
 	<h1>your cart is empty</h1>
 }
 
