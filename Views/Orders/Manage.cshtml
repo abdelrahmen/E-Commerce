@@ -1,0 +1,59 @@
+﻿@model IEnumerable<E_Commerce.Models.Order>
+
+@{
+	ViewData["Title"] = "Manage";
+}
+
+<h1>Manage</h1>
+
+<p>
+	<a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+	<thead>
+		<tr>
+			<th>
+				@Html.DisplayNameFor(model => model.Amount)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Total)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.CreatedAt)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.User)
+			</th>
+			<th>Status</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td>
+					<p>@item.Amount.ToString("C0")</p>
+				</td>
+				<td>
+					<p>@item.Total.ToString("C0")</p>
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.CreatedAt)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.User.Fullname)
+				</td>
+				<td>
+					<p>@item.status</p>
+				</td>
+				<td>
+					<form asp-action="AdminConfirmOrder" asp-route-id="@item.Id">
+						<a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+						<input class="btn btn-primary" type="submit" value="Start Shipping">
+					</form>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>

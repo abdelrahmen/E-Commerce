@@ -65,6 +65,21 @@ namespace E_Commerce.Controllers
             return RedirectToAction("Index");
         }
 
+        //Get: Orders/Manage
+        [Authorize(Roles ="Admin,SuperAdmin")]
+        public IActionResult Manage()
+        {
+            var orders = ordersRepository.GetAllOrders();
+            return View(orders);
+        }
 
-    }
+		//Post: Orders/AdminConfirmOrder
+		[Authorize(Roles = "Admin,SuperAdmin")]
+        [HttpPost]
+        public IActionResult AdminConfirmOrder(int id)
+        {
+            ordersRepository.AdminConfirmOrder(id);
+            return RedirectToAction("Manage");
+        }
+	}
 }

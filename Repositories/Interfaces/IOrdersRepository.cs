@@ -10,6 +10,11 @@ namespace E_Commerce.Repositories.Interfaces
 
 		Order GetOrderWithDetails(int id);
 
-		void ConfirmOrder(string userId);
+		List<Order> GetAllOrders();
+
+
+        void ConfirmOrder(string userId);
+
+		void AdminConfirmOrder(int id);
 	}
 }

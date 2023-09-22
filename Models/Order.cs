@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace E_Commerce.Models
@@ -21,7 +22,10 @@ namespace E_Commerce.Models
         [DataType(DataType.DateTime)]
         public DateTime CreatedAt { get; set; }
 
-        public User User { get; set; }
+        public string status { get; set; } = "Pending";
+
+
+		public User User { get; set; }
         public ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
     }
 }

@@ -25,6 +25,9 @@
 						<li class="nav-item">
 							<a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="ManageCustomers">Manage Customers</a>
 						</li>
+						<li class="nav-item">
+							<a class="nav-link text-dark" asp-area="" asp-controller="Orders" asp-action="Manage">Manage Orders</a>
+						</li>
 						@if (this.User.IsInRole("SuperAdmin"))
 						{
 							<li class="nav-item">
