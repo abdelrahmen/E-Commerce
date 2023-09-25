@@ -64,15 +64,24 @@ To run the application locally, follow these steps:
 ## Usage
 - Super Admin:
 
-Access the Super Admin dashboard to manage admin and customer accounts.
+    - Access the Super Admin dashboard to manage admin and customer accounts.
 
 - Admin:
 
-Access the Admin dashboard to manage customer accounts, products, categories, and order statuses.
+    - Access the Admin dashboard to manage customer accounts, products, categories, and order statuses.
 
 - Customer:
 
-Browse products, add them to the cart, and place orders.
+    - Browse products, add them to the cart, and place orders.
+
+
+## Default Super Admin Account:
+```Username: TemporaryUsername```
+
+```Password: TemporaryPassword```
+
+> [!WARNING]
+> You Have To Change Those Before Using The App, Either in the code or in the `Edit Profile` Page.
 
 ## Contributing
 Contributions are welcome! Feel free to open an issue or submit a pull request.
