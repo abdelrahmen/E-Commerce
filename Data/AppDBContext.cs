@@ -73,7 +73,7 @@
         }
         private User seedSuperAdmin()
         {
-            var hasher = new PasswordHasher<IdentityUser>();
+            var hasher = new PasswordHasher<User>();
             return new User
             {
                 Id = "1",
@@ -81,7 +81,9 @@
                 NormalizedUserName = "TEMPORARY-USERNAME",
                 Email = "TemporaryEmail@example.com",
                 NormalizedEmail = "TEMPORARYEMAIL@EXAMPLE.COM",
-                EmailConfirmed = true,
+                Address = "Temporary Address",
+                Fullname = "Temporary Full Name",
+				EmailConfirmed = true,
                 PasswordHash = hasher.HashPassword(null, "TemporaryPassword"),
                 SecurityStamp = string.Empty
             };
