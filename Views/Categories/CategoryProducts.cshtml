@@ -16,7 +16,15 @@
 				<h4 class="card-title">@product.Name</h4>
 				<h5 class="card-title">@product.Price.ToString("C0")</h5>
 				<p class="card-text">@product.Description</p>
-				<a href="#" class="btn btn-primary">Add To Cart</a>
+				<form asp-action="AddToCart" asp-controller="Cart">
+					<input hidden value="@product.Id" name="ProductId">
+					<div class="input-group mb-3">
+						<label class="input-group-text" for="Quantity">Quantity</label>
+						<input type="number" value="1" name="Quantity" id="Quantity" class="form-control">
+
+						<button type="submit" class="btn btn-outline-secondary">Add To Cart</button>
+					</div>
+				</form>
 			</div>
 		</div>
 
